@@ -1,0 +1,151 @@
+#include "stdafx.h"
+#include <iostream>
+#include <conio.h>
+#include <math.h>	
+#include <clocale>
+#include <stdlib.h>
+#include <string>
+#include <time.h>
+#pragma warning (disable:4996)
+
+struct stud
+{
+	char fam[30];
+	int mark[2][3];
+};
+
+void vvod_stud(FILE *f, int n, stud* mass)
+{
+	rewind(f);
+	for(int i=0;i<n;i++)
+	{
+		fscanf(f,"%s",mass[i].fam);
+		for(int i1=0;i1<2;i1++)
+			for(int j=0;j<3;j++)
+				fscanf(f,"%d",&mass[i].mark[i1][j]);
+		printf("Студент: %s В первом семестре: %d %d %d Во втором семестре: %d %d %d\n", mass[i].fam, mass[i].mark[0][0], mass[i].mark[0][1], mass[i].mark[0][2], mass[i].mark[1][0], mass[i].mark[1][1], mass[i].mark[1][2]);
+	}
+}
+
+int otl(stud *mass, int n)
+{
+	printf("Ищу отличников...\n");
+	for(int i=0;i<300000000;i++); 
+	int k,kol=0;
+	for(int i=0;i<n;i++)
+	{
+		k=0;
+		for(int i1=0;i1<2;i1++)
+			for(int j=0;j<3;j++)
+				if(mass[i].mark[i1][j]!=5) k++;
+		if(k==0) 
+		{
+			printf("Студент: %s В первом семестре: %d %d %d Во втором семестре: %d %d %d\n", mass[i].fam, mass[i].mark[0][0], mass[i].mark[0][1], mass[i].mark[0][2], mass[i].mark[1][0], mass[i].mark[1][1], mass[i].mark[1][2]);
+			kol++;
+		}
+	}
+	return kol;
+}
+
+void net_dvoek(stud* mass,int n)
+{
+	printf("Делаю 2 задание...\n");
+	for(int i=0;i<300000000;i++); 
+	int k=0;
+	for(int i=0;i<n;i++)
+	{
+		k=0;
+		for(int j=0;j<3;j++)
+			if(mass[i].mark[0][j]==2) k++;
+		if(k==0) printf("Студент: %s В первом семестре: %d %d %d Во втором семестре: %d %d %d\n", mass[i].fam, mass[i].mark[0][0], mass[i].mark[0][1], mass[i].mark[0][2], mass[i].mark[1][0], mass[i].mark[1][1], mass[i].mark[1][2]);
+	}
+}
+
+void poisk(stud* mass, int n, char s[25])
+{
+	int k=0;
+	for(int i=0;i<n;i++)
+		if(strcmp(s,mass[i].fam)==0) 
+		{
+			printf("Оценки %s: В первом семестре: %d %d %d Во втором семестре: %d %d %d\n", mass[i].fam, mass[i].mark[0][0], mass[i].mark[0][1], mass[i].mark[0][2], mass[i].mark[1][0], mass[i].mark[1][1], mass[i].mark[1][2]);
+			k++;
+		}
+	if(k==0) printf("В группе нет такого студента\n");
+}
+
+void chel(stud* mass, int n)
+{
+	printf("Занимаюсь 4 заданием...\n");
+	for(int i=0;i<300000000;i++); 
+	int k=0;
+	for(int i=0;i<n;i++)
+	{
+		if(mass[i].mark[0][0]>3) printf("Студент: %s В первом семестре: %d %d %d Во втором семестре: %d %d %d\n", mass[i].fam, mass[i].mark[0][0], mass[i].mark[0][1], mass[i].mark[0][2], mass[i].mark[1][0], mass[i].mark[1][1], mass[i].mark[1][2]);
+		k++;
+	}
+	if(k==0) printf("Таких нет\n");
+}
+
+void otch(stud* mass, int n)
+{
+	printf("Составляю список на отчисление...\n");
+	for(int i=0;i<300000000;i++); 
+	int k;
+	FILE *f;
+	f=fopen("f2.txt","w");
+	for(int i=0;i<n;i++) 
+	{
+		k=0;
+		for(int i1=0;i1<2;i1++)
+			for(int j=0;j<3;j++)
+				if(mass[i].mark[i1][j]==2) k++;
+		if(k>1) fprintf(f,"%s\n",mass[i].fam);
+	}
+	fclose(f);
+	printf("Готово\n");
+}
+
+int _tmain(int argc, _TCHAR* argv[])
+{
+	setlocale(LC_CTYPE,"");
+	
+	char s[25];
+	int n=0;
+	stud *mass;
+
+	FILE *f;
+	f=fopen("1.txt","r");
+	if(f==0) 
+	{
+		printf("Файл не открылся\n");
+		return 1;
+	}
+	while(fgets(s,30,f))
+		n++;
+	printf("В группе %d человек\n",n);
+	if(n==0) 
+	{
+		printf("В группе нет студентов");
+		return 1;
+	}
+	mass=new stud[n];
+
+	vvod_stud(f,n,mass);
+	printf("В группе %d отичник\n",otl(mass,n));
+
+	net_dvoek(mass,n);
+
+	printf("Введите фамилию студента\n");
+	scanf("%s",s);
+	printf("Думаю над 3 заданием...\n");
+	for(int i=0;i<300000000;i++); 
+	poisk(mass,n,s);
+
+	chel(mass,n);
+	otch(mass,n);
+
+	delete mass;
+
+	getch();
+	return 0;
+}
