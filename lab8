@@ -1,0 +1,222 @@
+#include "stdafx.h"
+#include <iostream>
+#include <conio.h>
+#include <math.h>	
+#include <clocale>
+#include <stdlib.h>
+#include <string>
+#include <time.h>
+#pragma warning (disable:4996)
+
+class school
+{
+public:
+	char fam[30];
+protected:
+	int year;
+private:
+	int ege[3];
+public:
+	void set_year(int new_year)
+	{
+		year=new_year;
+	}
+	int get_year()
+	{
+		return year;
+	}
+	void set_ege(int *new_ege)
+	{
+		for(int i=0;i<3;i++)
+			ege[i]=new_ege[i];
+	}
+	int *get_ege()
+	{
+		return ege;
+	}
+};
+
+class university: public school
+{
+protected:
+	int sessiya[4];
+public:
+	void set_sessiya(int *new_sessiya)
+	{
+		for(int i=0;i<4;i++)
+			sessiya[i]=new_sessiya[i];
+	}
+	int *get_sessiya()
+	{
+		return sessiya;
+	}
+	int sum_ege()
+	{
+		return get_ege()[0]+get_ege()[1]+get_ege()[2];
+	}
+	float sr_sessiya()
+	{
+		int y=0;
+		for(int i=0;i<4;i++)
+			y+=sessiya[i];
+		return y*0.25;
+	}
+	int age()
+	{
+		return 2021-year;
+	}
+};
+
+class college: public school
+{
+private:
+	int sessiya[3];
+public:
+	void set_sessiya(int *new_sessiya)
+	{
+		for(int i=0;i<3;i++)
+			sessiya[i]=new_sessiya[i];
+	}
+	int *get_sessiya()
+	{
+		return sessiya;
+	}
+	college()
+	{
+	
+	}
+	college(char *new_fam, int new_year, int *new_ege, int *new_sessiya)
+	{
+		strcpy(fam,new_fam);
+		year=new_year;
+		set_ege(new_ege);
+		set_sessiya(new_sessiya);
+	}
+	void bed_boy()
+	{
+		int k=0;   //  Ильгиз хароший мальчик (очень)//договорилися
+		for(int i=0;i<3;i++)
+			if(sessiya[i]==2) k++;
+		if (k) puts("   У студента есть двойки\n");
+		else puts("   У студента нет двоек\n");
+	}
+};
+
+class graduate: public university
+{
+public:
+	char cod[20];
+	graduate()
+	{
+
+	}
+	graduate(char *new_cod, char *new_fam, int new_year, int *new_ege, int *new_sessiya)
+	{
+		strcpy(cod,new_cod);
+		strcpy(fam,new_fam);
+		year=new_year;
+		set_ege(new_ege);        //а еще даня мельтисов лох и хуй сосет
+		for(int i=0;i<4;i++)
+			sessiya[i]=new_sessiya[i];
+	}
+	int min()
+	{
+		int m=5;
+		for(int i=0;i<4;i++)
+			if(sessiya[i]<m) m=sessiya[i];
+		return m;
+	}
+};
+
+int main()
+{
+	setlocale(LC_CTYPE,"");
+	
+	char fam[30], cod[20];
+	int year, ege[3], sessiya[4];
+
+	//1
+	school one;
+	university two;
+	puts("Введите данные по школьнику: фамилия, дату рождения и баллы ЕГЭ");
+	scanf("%s%d%d%d%d", one.fam, &year, &ege[0], &ege[1], &ege[2]);
+	one.set_year(year);
+	one.set_ege(ege);
+	puts("Введите данные по студенту вуза: фамилия, дату рождения, баллы ЕГЭ, результаты сессии");
+	scanf("%s%d%d%d%d", two.fam, &year, &ege[0], &ege[1], &ege[2]);
+	two.set_year(year);
+	two.set_ege(ege);
+	scanf("%d%d%d%d", &sessiya[0], &sessiya[1], &sessiya[2], &sessiya[3]);
+	two.set_sessiya(sessiya);
+	puts("Введите данные по студенту шараги: фамилия, дату рождения, баллы ЕГЭ, результаты сессии");
+	scanf("%s%d%d%d%d", fam, &year, &ege[0], &ege[1], &ege[2]);
+	scanf("%d%d%d", &sessiya[0], &sessiya[1], &sessiya[2]);
+	college three(fam, year, ege, sessiya);
+	puts("Введите данные по студенту аспирантуры: фамилия, дату рождения, баллы ЕГЭ, результаты сессии, код специальности");
+	scanf("%s%d%d%d%d", fam, &year, &ege[0], &ege[1], &ege[2]);
+	scanf("%d%d%d%d", &sessiya[0], &sessiya[1], &sessiya[2], &sessiya[3]);
+	scanf("%s", cod);
+	graduate four(cod, fam, year, ege, sessiya);
+	printf("Фамилия: %s\n   Год: %d\n   Баллы ЕГЭ: %d %d %d\n\n", one.fam, one.get_year(), one.get_ege()[0], one.get_ege()[1], one.get_ege()[2]);
+	printf("Фамилия: %s\n   Возраст: %d\n   Баллы ЕГЭ: %d %d %d\n", two.fam, two.age(), two.get_ege()[0], two.get_ege()[1], two.get_ege()[2]);
+	printf("   Результаты сессии: %d %d %d %d\n\n", two.get_sessiya()[0], two.get_sessiya()[1], two.get_sessiya()[2], two.get_sessiya()[3]);
+	printf("Фамилия: %s\n   Год: %d\n   Баллы ЕГЭ: %d %d %d\n", three.fam, three.get_year(), three.get_ege()[0], three.get_ege()[1], three.get_ege()[2]);
+	printf("   Результаты сессии: %d %d %d\n", three.get_sessiya()[0], three.get_sessiya()[1], three.get_sessiya()[2]);
+	three.bed_boy();
+	printf("Фамилия: %s\n   Возраст: %d\n   Баллы ЕГЭ: %d %d %d\n", four.fam, four.age(), four.get_ege()[0], four.get_ege()[1], four.get_ege()[2]);
+	printf("   Результаты сессии: %d %d %d %d\n", four.get_sessiya()[0], four.get_sessiya()[1], four.get_sessiya()[2], four.get_sessiya()[3]);
+	printf("   Код специальности: %s\n   Минимальный балл за сессию: %d\n\n", four.cod, four.min());
+	//2
+	FILE *f=fopen("gr.txt","r");
+	if(f==0)
+	{
+		puts("Файл не открылся");
+		getch();
+		return 0;
+	}
+	char s[60];
+	int n=0;
+	while(fgets(s,60,f))
+	{
+		n++;
+	}
+	/*
+	if(n>0) 
+		printf("n=%d\n",n);
+	else
+	{
+		puts("Список пуст");
+		getch();
+	}
+	*/
+	rewind(f);
+	graduate *spisok;
+	spisok=new graduate[n];
+	for(int i=0;i<n;i++)
+	{
+		fscanf(f,"%s%s%d%d%d%d%d%d%d%d", spisok[i].cod, spisok[i].fam, &year, &ege[0], &ege[1], &ege[2], &sessiya[0], &sessiya[1], &sessiya[2], &sessiya[3]);
+		spisok[i].set_year(year);
+		spisok[i].set_ege(ege);
+		spisok[i].set_sessiya(sessiya);
+	}
+	for(int i=0;i<n;i++)
+	{
+		printf("Фамилия: %s\n   Возраст: %d\n   Баллы ЕГЭ: %d %d %d\n", spisok[i].fam, spisok[i].age(), spisok[i].get_ege()[0], spisok[i].get_ege()[1], spisok[i].get_ege()[2]);
+		printf("   Результаты сессии: %d %d %d %d\n", spisok[i].get_sessiya()[0], spisok[i].get_sessiya()[1], spisok[i].get_sessiya()[2], spisok[i].get_sessiya()[3]);
+		printf("   Код специальности: %s\n   Минимальный балл за сессию: %d\n\n", spisok[i].cod, spisok[i].min());
+	}
+	
+	//3
+
+	int max=0;
+	for(int i=0; i<n; i++)
+	{
+		if(max<spisok[i].sum_ege()) max=spisok[i].sum_ege();
+	}
+
+	printf("\n\nМаксимальный суммарный балл ЕГЭ равен: %d\n", max);
+
+	delete spisok;
+	getch();
+	return 0;
+}
