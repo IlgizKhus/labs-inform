@@ -1,0 +1,223 @@
+#include "stdafx.h"
+#include <iostream>
+#include <conio.h>
+#include <math.h>	
+#include <clocale>
+#include <stdlib.h>
+#include <string>
+#include <time.h>
+#pragma warning (disable:4996)
+
+struct sp
+{
+	char fam[20];
+	int gr;
+	int m[3];
+	sp *f;
+};
+
+void vivod(sp *first)
+{
+	puts("Список:");
+	sp *f=first;
+	if(first==0)
+		puts("Список пустой");
+	while(f)
+	{
+		printf("Студент:%s Группа:%d Оценки:%d %d %d\n",f->fam,f->gr,f->m[0],f->m[1],f->m[2]);
+		f=f->f;
+	}
+}
+
+void vvod(FILE *f1,sp *first)
+{
+	sp *q;
+	q=first;
+	char fam[20];
+	int gr;
+	int m[3];
+	char str[30];
+	if(fscanf(f1,"%s%d%d%d%d",fam,&gr,&m[0],&m[1],&m[2])==5)
+		{
+			strcpy(first->fam,fam);
+			first->gr=gr;
+			for(int i=0;i<3;i++)
+				first->m[i]=m[i];
+		}
+	while(fgets(str,30,f1))
+	{
+		if(fscanf(f1,"%s%d%d%d%d",fam,&gr,&m[0],&m[1],&m[2])==5)
+		{
+			q->f=new sp;
+			q=q->f;
+			strcpy(q->fam,fam);
+			q->gr=gr;
+			for(int i=0;i<3;i++)
+				q->m[i]=m[i];
+		}
+	}
+	q->f=0;
+	vivod(first);
+}
+
+void search(sp *first)
+{
+	char str[20];
+	int n=0;
+	sp *q=first;
+	printf("Введите фамилию\n");
+	scanf("%s",str);
+	while(q)
+	{
+		if(strcmp(q->fam,str)==0) 
+		{
+			printf("Студент:%s Группа:%d Оценки:%d %d %d\n",q->fam,q->gr,q->m[0],q->m[1],q->m[2]);
+			n++;
+		}
+		q=q->f;
+	}
+	if(n==0) puts("Студентов с такой фамилией нет");
+}
+
+sp *add(sp *first)
+{
+	sp *q;
+	q=new sp;
+	printf("Введите данные нового студента\n");
+	scanf("%s",q->fam);
+	scanf("%d",&q->gr);
+	for(int i=0;i<3;i++)
+		scanf("%d",&q->m[i]);
+	q->f=first;
+	first=q;
+	vivod(first);
+	return first;
+}
+
+sp *delete_stud(sp *first)
+{
+	int k=0,n=0;
+	sp *q=first,*f=q->f;
+	while(f)
+	{
+		k=0;
+		for(int i=0;i<3;i++)
+			if(f->m[i]==2) k++;
+		if(k>1)
+		{
+			q->f=f->f;
+			delete f;
+			f=q->f;
+			n++;
+		}
+		else
+		{
+			q=q->f;
+			f=q->f;
+		}
+	}
+	k=0;
+	for(int i=0;i<3;i++)
+		if(first->m[i]==2) k++;
+	if(k>1)
+	{
+		f=first;
+		first=first->f;
+		delete f;
+		n++;
+	}
+	if(n==0) puts("Нет таких студентов");
+	vivod(first);
+	return first;
+}
+
+void otl(sp *first)
+{
+	sp *q=first;
+	int k=0,n=0;
+	while(q)
+	{
+		k=0;
+		for(int i=0;i<3;i++)
+			if(q->m[i]==5) k++;
+		if(k==3)
+		{
+			printf("Студент:%s Группа:%d Оценки:%d %d %d\n",q->fam,q->gr,q->m[0],q->m[1],q->m[2]);
+			n++;
+		}
+		q=q->f;
+	}
+	if(n==0)
+		puts("Отличников нет");
+}
+
+int _tmain(int argc, _TCHAR* argv[])
+{
+	setlocale(LC_CTYPE,"");
+
+	FILE *f;
+	f=fopen("11.txt","r");
+	if(f==0)
+	{
+		puts("Файл не открылся");
+		getch();
+		return 0;
+	}
+	char s[30];
+	int n=0;
+	while(fgets(s,30,f))
+	{
+		n++;
+	}
+	if(n>0) 
+		printf("n=%d\n",n);
+	else
+	{
+		puts("Список пуст");
+		getch();
+	}
+	rewind(f);
+
+	if(n>0)
+	{
+		sp *first;
+		first=new sp;
+		vvod(f,first);
+		int menu=0;
+		while(menu!=1)
+		{
+			if(first!=0)
+			{
+				puts("\n\nМеню");
+				puts("1)Выход");
+				puts("2)Вывод");
+				puts("3)Поиск по фамилии");
+				puts("4)Добавление студента");
+				puts("5)Отчисление");
+				puts("6)Вывод отличников");
+				scanf("%d",&menu);
+				switch(menu)
+				{
+					case 2:
+						vivod(first);
+						break;
+					case 3:
+						search(first);
+						break;
+					case 4:
+						first=add(first);
+						break;
+					case 5:
+						first=delete_stud(first);
+						break;
+					case 6:
+						otl(first);
+						break;
+				}
+			}
+		
+		}
+	}
+	fcloseall;
+	return 0;
+}
