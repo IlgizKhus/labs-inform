@@ -1,0 +1,344 @@
+#include "stdafx.h"
+#include <iostream>
+#include <conio.h>
+#include <math.h>	
+#include <clocale>
+#include <stdlib.h>
+#include <string>
+#include <time.h>
+#pragma warning (disable:4996)
+
+struct sp
+{
+	int r;
+	sp *prev;
+};
+
+sp *last=0;
+
+int kol()
+{
+	sp *q=last;
+	int n=0;
+	while(q)
+	{
+		n++;
+		q=q->prev;
+	}
+	return n;
+}
+
+void vivid()
+{
+	sp *f=last;
+	int i=1;
+	if(last==0) printf("Список пуст\n");
+	while(f!=0)
+	{
+		printf("%d элемент = %d   \tадрес %d;  адрес след поля %d\n",i++,f->r,f,f->prev);
+		f=f->prev;
+	}
+}
+
+void vvod()
+{
+	sp *f;
+	int flag;
+	printf("Хотите ли вы ввести список\n");
+	scanf("%d",&flag);
+	if(flag!=0)
+	{
+		last=new sp;
+		last->prev=0;
+		/*printf("Введите 1 элемент\n");
+		scanf("%d",&(last->r));*/
+		last->r=rand()%14+1;
+		f=last;
+		while(1)
+		{
+			printf("Продолжаем?\n");
+			scanf("%d",&flag);
+			if(flag==0) break;
+			last=new sp;
+			last->prev=f;
+			/*printf("Введите элемент\n");
+			scanf("%d",&(last->r));*/
+			last->r=rand()%14+1;
+			f=last;
+		}
+	}
+	vivid();
+}
+
+void ex1()
+{
+	puts("Введите число");
+	int n;
+	scanf("%d",&n);
+	sp *q=last;
+	int k=0;
+	while(q)
+	{
+		if(q->r>n) k++;
+		q=q->prev;
+	}
+	if(k==0) puts("Таких нет");
+	else printf("Элементов больше введенного: %d\n",k);
+}
+
+void ex2()
+{
+	puts("Элементы кратные 3:");
+	sp *q=last;
+	int k=0;
+	while(q)
+	{
+		if(q->r%3==0)
+		{
+			k++;
+			printf("Элемент = %d   \tадрес %d;  адрес след поля %d\n",q->r,q,q->prev);
+		}
+		q=q->prev;
+	}
+	if(k==0) puts("Таких элементов нет");
+}
+
+void ex3()
+{
+	sp *q=last->prev;
+	delete last;
+	last=q;
+	vivid();
+}
+
+void ex4()
+{
+	sp *q=last;
+	if(last)
+	{
+		if(last->prev)
+		{
+			while(q->prev->prev)
+			q=q->prev;
+			delete q->prev;
+			q->prev=0;
+		}
+		else
+		{
+			delete last;
+			last=0;
+		}
+	}
+	vivid();
+}
+
+void ex5()
+{
+	sp *q=new sp;
+	/*printf("Введите элемент\n");
+	scanf("%d",&(q->r));*/
+	q->r=rand()%14+1;
+	q->prev=last;
+	last=q;
+	vivid();
+}
+
+void ex6()
+{
+	sp *n=new sp, *q=last;;
+	/*printf("Введите элемент\n");
+	scanf("%d",&(n->r));*/
+	n->r=rand()%14+1;
+	n->prev=0;
+	while(q->prev)
+	{
+		q=q->prev;
+	}
+	q->prev=n;
+	vivid();
+}
+
+void ex7()
+{
+	sp *e=new sp, *q=last;;
+	/*printf("Введите элемент\n");
+	scanf("%d",&(e->r));*/
+	e->r=rand()%14+1;
+	printf("Введите номер элемента после которого нужно добавить число\n");
+	int k=-1, n=kol();
+	while((k>n)||(k<=0))
+		scanf("%d",&k);
+	for(int i=1;i<k;i++)
+		q=q->prev;
+	e->prev=q->prev;
+	q->prev=e;
+	vivid();
+}
+
+void ex8()
+{
+	puts("Введите число");
+	int n;
+	scanf("%d",&n);
+	sp *q=last, *f;
+	while(q)
+	{
+		if(q->r==n)
+		{
+			f=new sp;
+			f->r=0;
+			f->prev=q->prev;
+			q->prev=f;
+			q=q->prev;
+		}
+		q=q->prev;
+	}
+	vivid();
+}
+
+void ex9()
+{
+	puts("Введите число");
+	int n;
+	scanf("%d",&n);
+	sp *q=last, *f;
+	while(q)
+	{
+		if(q->r==n)
+		{
+			f=new sp;
+			puts("Введите число");
+			scanf("%d",&f->r);
+			f->prev=q->prev;
+			q->prev=f;
+			q=q->prev;
+		}
+		q=q->prev;
+	}
+	vivid();
+}
+
+void ex10()
+{
+	puts("Введите номер элемента");
+	int n=0,k=kol();
+	while((n<=0)||(n>k))
+		scanf("%d",&n);
+	sp *q=last, *f;
+	if(n>1)
+	{
+		for(int i=1;i<n-1;i++)
+			q=q->prev;
+		f=q->prev;
+		q->prev=f->prev;
+		delete f;
+		vivid();
+	}
+	else
+		ex3();
+}
+
+void ex11()
+{
+	sp *q=last, *f=q->prev;
+	int n;
+	puts("Введите число");
+	scanf("%d",&n);
+	while(f)
+	{
+		if(f->r>n)
+		{
+			q->prev=f->prev;
+			delete f;
+			f=q->prev;
+		}
+		else
+		{
+			q=q->prev;
+			f=q->prev;
+		}
+	}
+	if(last->r>n)
+		ex3();
+	else
+		vivid();
+}
+
+int _tmain(int argc, _TCHAR* argv[])
+{
+	setlocale(LC_CTYPE,"");
+	srand(time(0));
+	vvod();
+	int menu=0;
+	while(menu!=1)
+	{
+		menu=1;
+		if(last!=0)
+		{
+			puts("\n\nМеню");
+			puts("1)Выход");
+			puts("2)Вывод");
+			puts("3)Сколько элементов больше введенного");
+			puts("4)Элементы кратные 3");
+			puts("5)Удаление 1 элемента");
+			puts("6)Удаление последнего элемента");
+			puts("7)Добавление элемента перед первым");
+			puts("8)Добавление элемента после последнего");
+			puts("9)Добавление элемента после элемента номер n");
+			puts("10)Добавление после элемента равного введенному элемента равного 0");
+			puts("11)Добавление после элемента равного ввеменному элемента равного введенному значению");
+			puts("12)Удаление элемента номер n");
+			puts("13)Удаление элементов больше введенного");
+			scanf("%d",&menu);
+			switch(menu)
+			{
+				case 2:
+					printf("\nСписок:\n");
+					vivid();
+					break;
+				case 3:
+					ex1();
+					break;
+				case 4:
+					ex2();
+					break;
+				case 5:
+					ex3();
+					break;
+				case 6:
+					ex4();
+					break;
+				case 7:
+					ex5();
+					break;
+				case 8:
+					ex6();
+					break;
+				case 9:
+					ex7();
+					break;
+				case 10:
+					ex8();
+					break;
+				case 11:
+					ex9();
+					break;
+				case 12:
+					ex10();
+					break;
+				case 13:
+					ex11();
+					break;
+			}
+		}
+		else 
+		{
+			puts("Добавить новый элемент? 1-yes 0-no");
+			scanf("%d",&menu);
+			if(menu)
+				ex5();
+			menu=2;
+		}
+	}
+	return 0;
+}
