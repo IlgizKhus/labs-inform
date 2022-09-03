@@ -1,0 +1,174 @@
+#include "stdafx.h"
+#include <iostream>
+#include <conio.h>
+#include <math.h>	
+#include <clocale>
+#include <stdlib.h>
+#include <string>
+#include <time.h>
+#pragma warning (disable:4996)
+
+class towar
+{
+private:
+	char name[15];
+	int col;
+	int price1;
+	int price2;
+
+public:
+	int priceall()
+	{
+		return price1*col;
+	}
+	
+	int profit()
+	{
+		return (price2-price1)*col;
+	}
+
+	void setname(char *newname)
+	{
+		strcpy(name,newname);
+	}
+
+	void setcol(int newcol)
+	{
+		col=newcol;
+	}
+
+	void setprice1(int newprice1)
+	{
+		price1=newprice1;
+	}
+
+	void setprice2(int newprice2)
+	{
+		price2=newprice2;
+	}
+
+	char *getname()
+	{
+		return name;
+	}
+
+	int getcol()
+	{
+		return col;
+	}
+
+	int getprice1()
+	{
+		return price1;
+	}
+
+	int getprice2()
+	{
+		return price2;
+	}
+
+	towar()
+	{
+		
+	}
+
+	towar(char *newname, int newcol, int newprice1, int newprice2)
+	{
+		strcpy(name,newname);
+		col=newcol;
+		price1=newprice1;
+		price2=newprice2;
+	}
+
+	towar(char *newname, int newcol)
+	{		
+		int l=0;
+		if(!strcmp(newname,"pen"))
+		{
+			strcpy(name,newname);
+			col=newcol;
+			price1=40;
+			price2=50;
+			l=1;
+		}
+		if(!strcmp(newname,"pencil"))
+		{
+			strcpy(name,newname);
+			col=newcol;
+			price1=30;
+			price2=35;
+			l=1;
+		}
+		if(!strcmp(newname,"note"))
+		{
+			strcpy(name,newname);
+			col=newcol;
+			price1=90;
+			price2=100;
+			l=1;
+		}
+		if(!l)
+		{
+			strcpy(name,newname);
+			col=newcol;
+			price1=0;
+			price2=0;
+			l=1;		
+		}
+	}
+};
+
+int main()
+{
+	setlocale(LC_CTYPE,"");
+	
+	char name[15];
+	int col, price1, price2;
+	
+	//1
+	towar one("pen", 3, 120, 150);
+	printf("Товар: %s\n   Количество: %d\n   Стоимость покупки единицы: %d\n   Стоимость продажи единицы: %d\n", one.getname(), one.getcol(), one.getprice1(), one.getprice2());
+	printf("   Покупная стоимость всего товара: %d\n   Прибыть от всего товара: %d\n", one.priceall(), one.profit());
+
+	//2
+	puts("Введите данные о товаре");
+	scanf("%s%d%d%d", name, &col, &price1, &price2);
+	towar two(name, col, price1, price2);
+	printf("Товар: %s\n   Количество: %d\n   Стоимость покупки единицы: %d\n   Стоимость продажи единицы: %d\n", two.getname(), two.getcol(), two.getprice1(), two.getprice2());
+	printf("   Покупная стоимость всего товара: %d\n   Прибыть от всего товара: %d\n", two.priceall(), two.profit());
+
+	//3
+	puts("Введите название и количество товара");
+	scanf("%s%d", name, &col);
+	towar three(name, col);
+	printf("Товар: %s\n   Количество: %d\n   Стоимость покупки единицы: %d\n   Стоимость продажи единицы: %d\n", three.getname(), three.getcol(), three.getprice1(), three.getprice2());
+	printf("   Покупная стоимость всего товара: %d\n   Прибыть от всего товара: %d\n", three.priceall(), three.profit());
+	
+	//4
+	towar four[3]={towar("pen", 10, 110, 150), towar("pencil", 50, 10, 15), towar("notepad", 20, 100, 110)};
+	for(int i=0;i<3;i++)
+	{
+		printf("Товар: %s\n   Количество: %d\n   Стоимость покупки единицы: %d\n   Стоимость продажи единицы: %d\n", four[i].getname(), four[i].getcol(), four[i].getprice1(), four[i].getprice2());
+		printf("   Покупная стоимость всего товара: %d\n   Прибыть от всего товара: %d\n", four[i].priceall(), four[i].profit());
+	}
+
+	//5
+	towar five[2];
+	puts("Введите данные");
+	for(int i=0;i<2;i++)
+	{
+		scanf("%s%d%d%d", name, &col, &price1, &price2);
+		five[i].setname(name);
+		five[i].setcol(col);
+		five[i].setprice1(price1);
+		five[i].setprice2(price2);
+	}
+	for(int i=0;i<2;i++)
+	{
+		printf("Товар: %s\n   Количество: %d\n   Стоимость покупки единицы: %d\n   Стоимость продажи единицы: %d\n", five[i].getname(), five[i].getcol(), five[i].getprice1(), five[i].getprice2());
+		printf("   Покупная стоимость всего товара: %d\n   Прибыть от всего товара: %d\n", five[i].priceall(), five[i].profit());
+	}
+
+	getch();
+	return 0;
+}
