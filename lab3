@@ -1,0 +1,375 @@
+#include "stdafx.h"
+#include <iostream>
+#include <conio.h>
+#include <math.h>	
+#include <clocale>
+#include <stdlib.h>
+#include <string>
+#include <time.h>
+#pragma warning (disable:4996)
+
+struct sp
+{
+	int el;
+	sp *f;
+};
+
+sp *first=0;
+
+int kol_vo()
+{
+	sp *q=first;
+	int n=0;
+	while(q)
+	{
+		q=q->f;
+		n++;
+	}
+	return n;
+}
+
+void vvod()
+{
+	sp *f,*q;
+	int flag;
+	printf("Хотите ли вы ввести список\n");
+	scanf("%d",&flag);
+	if(flag!=0)
+	{
+		printf("Введите 1 элемент\n");
+		first=new sp;
+		//scanf("%d",&(first->el));
+		first->el=rand()%14+1;
+		f=first;
+	
+		while(1)
+		{
+			printf("Продолжаем?\n");
+			scanf("%d",&flag);
+			if(flag==0) break;
+			q=new sp;
+			f->f=q;
+			/*printf("Введите элемент\n");
+			scanf("%d",&(q->el));*/
+			q->el=rand()%14+1;
+			f=q;
+		}
+		f->f=0;
+	}
+}
+
+void vivid()
+{
+	sp *f=first;
+	int i=1;
+	while(f!=0)
+	{
+		printf("%d элемент = %d   \tадрес %d;  адрес след поля %d\n",i++,f->el,f,f->f);
+		f=f->f;
+	}
+}
+
+int elbolsh(int k)//кол-во элементов больше введенного
+{
+	sp *f=first;
+	int a=0;
+	while(f!=0)
+	{
+		if(f->el>k) 
+		{
+			printf("Элемент = %d по адресу %d\n",f->el,f);
+			a++;
+		}
+		f=f->f;
+	}
+	return a;
+}
+
+void kratnie()//вывод элементво кратных 3
+{
+	sp *f=first;
+	printf("\nЭлементы кратные 3:\n");
+	int n=0;
+	while(f!=0)
+	{
+		if(f->el%3==0) 
+		{
+			printf("Элемент = %d по адресу %d\n",f->el,f);
+			n++;
+		}
+		f=f->f;
+	}
+	if(n==0)
+		printf("В списке нет элементов кратных 3\n");
+}
+
+void udfirst()//удаление 1 элемента
+{
+	sp *f=first;
+	first=first->f;
+	delete(f);
+	printf("\nПосле удаления 1 элемента\n");
+	vivid();
+}
+
+void udlast()//удаление последнего элемента
+{
+	sp *q=first,*f=first;
+	if(q->f==0)
+	{
+		first=0;
+		delete q;
+	}
+	else
+	{
+		while(q!=0)
+		{
+			f=q->f;
+			if(f->f==0) 
+			{
+				q->f=0;
+				delete(f);
+			}
+			q=q->f;
+		}
+	}
+	printf("\nПосле удаления последнего элемента\n");
+	vivid();
+}
+
+void dobfirst()//добавление элемента перед 1 элементом
+{
+	puts("\nВведите новый первый элемент");
+	sp *q;
+	q=new sp;
+	scanf("%d",&q->el);
+	q->f=first;
+	first=q;
+	printf("После добавления нового элемента: \n");
+	vivid();
+}
+
+void doblast()//добавлние элемента после последнего элемента
+{
+	sp *q=first;
+	while(q->f)
+	{
+		q=q->f;
+	}
+	puts("Введите новый последний элемент");
+	sp *f;
+	f=new sp;
+	q->f=f;
+	f->f=0;
+	scanf("%d",&f->el);
+	vivid();
+}
+
+void dobn()//добавление элемента после н-ного элемента
+{
+	sp *q=first,*f;
+	int n=kol_vo();
+	int nom=n+1;
+	while((nom>n)||(nom<=0))
+	{
+		puts("Введите номер элемента, после когорого нужно ввести новый элемент");
+		scanf("%d",&nom);
+	}
+	for(int i=1; i!=nom;i++)
+		q=q->f;
+	f=new sp;
+	puts("Введите новый элемент");
+	scanf("%d",&f->el);
+	f->f=q->f;
+	q->f=f;
+	vivid();
+}
+
+void dobn0(int x)//добавление 0 после элементов=введенному
+{
+	sp *q=first,*f;
+	while(q)
+	{
+		if(q->el==x) 
+		{
+			f=new sp;
+			f->el=0;
+			f->f=q->f;
+			q->f=f;
+			q=q->f;
+		}
+		q=q->f;
+	}
+	vivid();
+}
+
+void dobnk(int x)//добавление элемента после элемента=к
+{
+	sp *q=first,*f;
+	while(q)
+	{
+		if(q->el==x) 
+		{
+			f=new sp;
+			puts("Введите новый элемент");
+			scanf("%d",&f->el);
+			f->f=q->f;
+			q->f=f;
+			q=q->f;
+		}
+		q=q->f;
+	}
+	vivid();
+}
+
+void udn()//удаление элемента номер к
+{
+	sp *p=first, *q=first->f;
+	int x=-1,kol=kol_vo();
+	while((x<=0)||(x>kol))
+	{
+		printf("Введите номер элемента, который нужно удалить\n");
+		scanf("%d",&x);
+	}
+	if(x!=1)
+	{
+		for(int i=2;i<x;i++)
+		{
+			p=q;
+			q=q->f;
+		}
+		p->f=q->f;
+		delete q;
+	}
+	else
+	{
+		first=q;
+		delete p;
+	}
+	vivid();
+}
+
+void udbol()//удаление элементов больше введенного
+{
+	sp *p=first,*q=first->f;
+	int x;
+	printf("Введите число\n");
+	scanf("%d",&x);
+	while(q)
+	{
+		if(q->el>x)
+		{
+			p->f=q->f;
+			delete q;
+			q=p->f;
+		}
+		else
+		{
+			p=q;
+			q=q->f;
+		}
+	}
+	if(first)
+		if(first->el>x)
+		{
+			p=first;
+			first=first->f;
+			delete p;
+		}
+	vivid();
+}
+
+int _tmain(int argc, _TCHAR* argv[])
+{
+	setlocale(LC_CTYPE,"");
+	srand(time(0));
+	int x=0;
+	vvod();
+	vivid();
+	int menu=0;
+	while(menu!=1)
+	{
+		if(first!=0)
+		{
+			puts("\n\nМеню");
+			puts("1)Выход");
+			puts("2)Вывод");
+			puts("3)Элементы больше введенного");
+			puts("4)Элементы кратные 3");
+			puts("5)Удаление первого элемента");
+			puts("6)Удаление последнего элемента");
+			puts("7)Добавить элемент перед 1");
+			puts("8)Добавить элемент после последнего");
+			puts("9)Добавить элемент после введенного");
+			puts("10)Добавить 0 после всех элементов=введенному");
+			puts("11)Добавить новый элемент после всех элементов=введенному");
+			puts("12)Удалить элемент номер n");
+			puts("13)Удалить элементы больше введенного");
+			scanf("%d",&menu);
+			switch(menu)
+			{
+				case 2:
+					printf("\nСписок:\n");
+					vivid();
+					break;
+				case 3:
+					printf("Введите число\n");
+					scanf("%d",&x);
+					x=elbolsh(x);
+					if (x!=0)
+						printf("\nЭлементов больше введенного: %d\n",x);
+					else
+						printf("\nНет элементов больше введенного\n");
+					break;
+				case 4:
+					kratnie();
+					break;
+				case 5:
+					udfirst();
+					break;
+				case 6:
+					udlast();
+					break;
+				case 7:
+					dobfirst();
+					break;
+				case 8:
+					doblast();
+					break;
+				case 9:
+					dobn();
+					break;
+				case 10:
+					puts("Введите значения элементов");
+					scanf("%d",&x);
+					dobn0(x);
+					break;
+				case 11:
+					puts("Введите значения элементов");
+					scanf("%d",&x);
+					dobnk(x);
+					break;
+				case 12:
+					udn();
+					break;
+				case 13:
+					udbol();
+					break;
+			}
+		}
+		else
+		{
+			int i=0;
+			printf("В списке закончились элементы\nДобавить новый?\n");
+			scanf("%d",&i);
+			if(i==0)
+			{
+				menu=1;
+				getch();
+			}
+			else
+				dobfirst();
+		}
+	}
+	return 0;
+}
